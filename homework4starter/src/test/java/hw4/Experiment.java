@@ -17,7 +17,7 @@ public class Experiment {
   // Update this to suppress the output.
   public static boolean VERBOSE = true;
   // Update this to any other data file for benchmarking experiments.
-  public static String DATA_FILE = "hotel_california.txt";
+  public static String DATA_FILE = "federalist01.txt";
 
   /**
    * Execution starts here.

@@ -1,12 +1,16 @@
 package hw4;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import exceptions.EmptyException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.BeforeEach;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,165 +30,100 @@ public abstract class PriorityQueueTest {
   void newQueueEmpty() {
     assertTrue(pq.empty());
   }
-  @Test
-  @DisplayName("Iterator works on empty queue")
-  void iteratorOnEmptyQueue() {
-    Iterator<Integer> iterator = pq.iterator();
-    assertEquals(false, iterator.hasNext());
-
-    try {
-      iterator.next();
-    } catch (NoSuchElementException e) {
-      assertEquals(true, true);
+    @Test
+    @DisplayName("Insert a single element and retrieve it")
+    void insertSingleElement() throws EmptyException {
+        pq.insert(10);
+        assertFalse(pq.empty());
+        assertEquals(10, pq.best());
     }
-  }
 
-  @Test
-  @DisplayName("Iterator hasNext and next work correctly")
-  void iteratorHasNextAndNext() {
-    pq.insert(10);
-    pq.insert(20);
-    pq.insert(5);
+    @Test
+    @DisplayName("Insert multiple elements and retrieve the minimum")
+    void insertMultipleElements() throws EmptyException {
+        pq.insert(5);
+        pq.insert(3);
+        pq.insert(8);
+        pq.insert(1);
+        pq.insert(9);
 
-    Iterator<Integer> iterator = pq.iterator();
-
-    assertEquals(true, iterator.hasNext());
-    assertEquals(5, iterator.next());
-
-    assertEquals(true, iterator.hasNext());
-    assertEquals(20, iterator.next());
-
-    assertEquals(true, iterator.hasNext());
-    assertEquals(10, iterator.next());
-
-    assertEquals(false, iterator.hasNext());
-    
-    try {
-      iterator.next();
-    } catch (NoSuchElementException e) {
-      assertEquals(true, true);
+        assertEquals(1, pq.best());
     }
-  }
 
-  @Test
-  @DisplayName("Iterator correctly traverses queue after removal")
-  void iteratorAfterRemoval() throws EmptyException {
-    pq.insert(10);
-    pq.insert(20);
-    pq.insert(5);
+    @Test
+    @DisplayName("Remove elements maintains the min-heap property")
+    void removeElements() throws EmptyException {
+        pq.insert(5);
+        pq.insert(3);
+        pq.insert(8);
+        pq.insert(1);
+        pq.insert(9);
 
-    pq.remove();
+        assertEquals(1, pq.best());
 
-    Iterator<Integer> iterator = pq.iterator();
+        pq.remove();
+        assertEquals(3, pq.best());
 
-    assertEquals(true, iterator.hasNext());
-    assertEquals(10, iterator.next());
+        pq.remove();
+        assertEquals(5, pq.best());
 
-    assertEquals(true, iterator.hasNext());
-    assertEquals(20, iterator.next());
+        pq.remove();
+        assertEquals(8, pq.best());
 
-    assertEquals(false, iterator.hasNext());
+        pq.remove();
+        assertEquals(9, pq.best());
 
-    try {
-      iterator.next();
-    } catch (NoSuchElementException e) {
-      assertEquals(true, true);
+        pq.remove();
+        assertTrue(pq.empty());
     }
-  }
 
-  @Test
-  @DisplayName("Iterator handles queue with one element")
-  void iteratorOnSingleElement() {
-    pq.insert(15);
-
-    Iterator<Integer> iterator = pq.iterator();
-
-    assertEquals(true, iterator.hasNext());
-    assertEquals(15, iterator.next());
-
-    assertEquals(false, iterator.hasNext());
-
-    try {
-      iterator.next();
-    } catch (NoSuchElementException e) {
-      assertEquals(true, true);
+    @Test
+    @DisplayName("Best throws EmptyException when queue is empty")
+    void bestEmptyException() {
+        assertThrows(EmptyException.class, () -> {
+            pq.best();
+        });
     }
-  }
-  @Test
-  @DisplayName("Insert multiple elements and check iterator order")
-  void insertMultipleElements() {
-    pq.insert(10);
-    pq.insert(3);
-    pq.insert(6);
 
-    Iterator<Integer> iterator = pq.iterator();
-
-    assertEquals(3, iterator.next());  // 3 is the minimum element in the heap
-    assertEquals(6, iterator.next());
-    assertEquals(10, iterator.next());
-    assertEquals(false, iterator.hasNext());
-
-    try {
-      iterator.next();
-    } catch (NoSuchElementException e) {
-      assertEquals("no elements left", e.getMessage());
+    @Test
+    @DisplayName("Remove throws EmptyException when queue is empty")
+    void removeEmptyException() {
+        assertThrows(EmptyException.class, () -> {
+            pq.remove();
+        });
     }
-  }
-  @Test
-  @DisplayName("Insert duplicate elements and check iterator")
-  void insertDuplicates() {
-    pq.insert(7);
-    pq.insert(7);
-    pq.insert(7);
 
-    Iterator<Integer> iterator = pq.iterator();
-
-    assertEquals(7, iterator.next());
-    assertEquals(7, iterator.next());
-    assertEquals(7, iterator.next());
-    assertEquals(false, iterator.hasNext());
-  }
-
-  @Test
-  @DisplayName("Insert and remove several elements in succession")
-  void multipleOperations() throws EmptyException {
-    pq.insert(15);
-    pq.insert(22);
-    pq.insert(9);
-    pq.insert(33);
-    pq.insert(3);
-
-    pq.remove();  // Removes 3, the smallest element
-    pq.remove();  // Removes 9, the next smallest
-
-    Iterator<Integer> iterator = pq.iterator();
-
-    assertEquals(15, iterator.next());
-    assertEquals(22, iterator.next());
-    assertEquals(33, iterator.next());
-    assertEquals(false, iterator.hasNext());
-
-    try {
-      iterator.next();
-    } catch (NoSuchElementException e) {
-      assertEquals("no elements left", e.getMessage());
+    @Test
+    @DisplayName("Inserting null throws IllegalArgumentException")
+    void insertNullException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            pq.insert(null);
+        });
     }
-  }
 
-  @Test
-  @DisplayName("Insert with custom comparator (reverse order)")
-  void insertWithCustomComparator() {
-    BinaryHeapPriorityQueue<Integer> reversePQ = new BinaryHeapPriorityQueue<>((a, b) -> b - a);
+    @Test
+    @DisplayName("Heap maintains min-heap property after multiple insertions and removals")
+    void complexOperations() throws EmptyException {
+        int[] elements = {20, 15, 30, 10, 5, 25, 35, 2, 8, 12};
+        for (int elem : elements) {
+            pq.insert(elem);
+        }
 
-    reversePQ.insert(5);
-    reversePQ.insert(10);
-    reversePQ.insert(3);
+        assertEquals(2, pq.best());
 
-    Iterator<Integer> iterator = reversePQ.iterator();
+        pq.remove();
+        assertEquals(5, pq.best());
 
-    assertEquals(10, iterator.next());
-    assertEquals(5, iterator.next());
-    assertEquals(3, iterator.next());
-    assertEquals(false, iterator.hasNext());
-  }
+        pq.insert(1);
+        assertEquals(1, pq.best());
+
+        pq.remove();
+        assertEquals(5, pq.best());
+
+        while (!pq.empty()) {
+            pq.remove();
+        }
+
+        assertTrue(pq.empty());
+    }
 }

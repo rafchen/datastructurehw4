@@ -31,7 +31,7 @@ public class TreapMapTest extends BinarySearchTreeMapTest {
   @DisplayName("Insert and verify treap structure")
   public void testInsertSingleElement() {
     map.insert("10", "j");
-    String[] expected = { "10:j" };
+    String[] expected = { "10:j:-1155869325" };
     assertEquals(String.join("\n", expected) + "\n", map.toString());
   }
 
@@ -64,7 +64,7 @@ public class TreapMapTest extends BinarySearchTreeMapTest {
     map.insert("10", "j");
     map.insert("5", "e");
     map.remove("5");
-    String[] expected = { "10:j" };
+    String[] expected = { "10:j:-1155869325" };
     assertEquals(String.join("\n", expected) + "\n", map.toString());
   }
 
@@ -75,7 +75,8 @@ public class TreapMapTest extends BinarySearchTreeMapTest {
     map.insert("5", "e");
     map.insert("7", "g");
     map.remove("5");
-    String[] expected = { "10:j", "7:g" };
+    String[] expected = { "10:j:-1155869325\n" +
+        "null 7:g:1761283695" };
     assertEquals(String.join("\n", expected) + "\n", map.toString());
   }
 
@@ -85,7 +86,7 @@ public class TreapMapTest extends BinarySearchTreeMapTest {
     map.insert("10", "j");
     map.insert("5", "e");
     map.remove("10");
-    String[] expected = { "5:e" };
+    String[] expected = { "5:e:431529176" };
     assertEquals(String.join("\n", expected) + "\n", map.toString());
   }
 
@@ -125,7 +126,7 @@ public class TreapMapTest extends BinarySearchTreeMapTest {
   }
 
   @Test
-  @DisplayName("Remove non-existing key throws exception")
+  @DisplayName("remove non-existing key throws exception")
   public void testRemoveNonExistingKey() {
     map.insert("1", "a");
     try {
@@ -157,7 +158,8 @@ public class TreapMapTest extends BinarySearchTreeMapTest {
     map.insert("4", "d");
     map.insert("2", "b");
     map.insert("6", "f");
-    String[] expected = { "4:d", "2:b 6:f" };
+    String[] expected = { "4:d:-1155869325\n" +
+        "2:b:431529176 6:f:1761283695" };
     assertEquals(String.join("\n", expected) + "\n", map.toString());
   }
 }
