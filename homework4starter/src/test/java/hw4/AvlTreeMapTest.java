@@ -41,7 +41,7 @@ public class AvlTreeMapTest extends BinarySearchTreeMapTest {
         1:a 3:c
      */
 
-    String[] expected = new String[]{
+    String[] expected = new String[] {
         "2:b",
         "1:a 3:c"
     };
