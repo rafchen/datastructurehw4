@@ -15,7 +15,7 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
 
   @Override
   public void insert(K k, V v) throws IllegalArgumentException {
-    // TODO Implement Me!
+    int i = 0;
   }
 
   @Override
